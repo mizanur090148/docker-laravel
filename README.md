@@ -1,5 +1,5 @@
 # docker-laravel
-1. clone project
+clone project
 ##### Run this command #####
 ./local.sh start
 ##### To access application conatiner ######
