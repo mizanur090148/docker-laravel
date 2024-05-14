@@ -29,7 +29,8 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_USER: ${DB_USERNAME}
     ports:
-      - "3309:3306"
+      - "3308:3306"
+
   # Database Management
   pma:
     image: phpmyadmin:5.1
