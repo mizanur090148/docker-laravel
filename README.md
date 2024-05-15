@@ -1,9 +1,9 @@
 # docker-laravel
 clone project
 ##### Run this command #####
-./local.sh start
+bash local.sh start
 ##### To access application conatiner ######
-./local.sh ssh
+bash local.sh ssh
 ##### Then #####
 composer install
 php artisan key:generate
