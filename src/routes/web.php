@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    DB::table('tests')->insert([
+    \DB::table('tests')->insert([
         'name' => 'Mr milon'
     ]);
     return view('welcome');

@@ -1,6 +1,6 @@
 version: "3.8"
-
 services:
+  # Application
   app:
     build:
       context: ./docker/services/app
@@ -8,9 +8,7 @@ services:
     working_dir: /var/www
     volumes:
       - ./src:/var/www
-    networks:
-      - backend
-
+  # Web Server
   web:
     build:
       context: ./docker/services/web
@@ -19,15 +17,12 @@ services:
     volumes:
       - ./src:/var/www
     ports:
-      - "8080:80"
-    networks:
-      - frontend
-      - backend
-
+      - "8088:80"
+  # Database
   database:
     image: mysql:8.0.25
     volumes:
-      - mysql_data:/var/lib/mysql
+      - ./docker/volumes/mysql:/var/lib/mysql
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
@@ -35,14 +30,8 @@ services:
       MYSQL_USER: ${DB_USERNAME}
     ports:
       - "3308:3306"
-    networks:
-      - backend
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
+  # Database Management
   pma:
     image: phpmyadmin:5.1
     environment:
@@ -52,35 +41,21 @@ services:
       - PMA_PASSWORD=${DB_PASSWORD}
       - PMA_PORT=${DB_PORT}
     depends_on:
-      - database
+      - "database"
     ports:
       - "8888:80"
-    networks:
-      - backend
-
+  # Caching
   redis:
     image: redis:alpine
     volumes:
-      - redis_data:/data
+      - ./docker/volumes/redis:/data
     ports:
       - "6379:6379"
-    networks:
-      - backend
-    restart: unless-stopped
-
+  # Mailing Server
   mailhog:
     image: mailhog/mailhog:latest
+    logging:
+      driver: "none"
     ports:
       - "1025:1025"
       - "8025:8025"
-    profiles: ["tools"]
-    networks:
-      - frontend
-
-volumes:
-  mysql_data:
-  redis_data:
-
-networks:
-  frontend:
-  backend:
